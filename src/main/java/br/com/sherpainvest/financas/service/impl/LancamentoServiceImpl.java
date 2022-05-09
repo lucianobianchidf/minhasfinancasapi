@@ -3,6 +3,7 @@ package br.com.sherpainvest.financas.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.sherpainvest.financas.exception.RegraNegocioException;
 import br.com.sherpainvest.financas.model.entity.Lancamento;
 import br.com.sherpainvest.financas.model.enums.StatusLancamento;
+import br.com.sherpainvest.financas.model.enums.TipoLancamento;
 import br.com.sherpainvest.financas.model.repository.LancamentoRepository;
 import br.com.sherpainvest.financas.service.LancamentoService;
 
@@ -81,6 +83,26 @@ public class LancamentoServiceImpl implements LancamentoService {
 			
 		if (lancamento.getTipo() == null)
 			throw new RegraNegocioException("Informe um tipo de lançamento.");
+	}
+
+	@Override
+	public Optional<Lancamento> buscarPorId(Long idLancamento) {
+		return lancamentoRepository.findById(idLancamento);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public BigDecimal obterSaldoPorUsuario(Long id) {
+		BigDecimal receitas = lancamentoRepository.obterSaldoPorTipoLancamentoUsuario(id, TipoLancamento.RECEITA);
+		BigDecimal despesas = lancamentoRepository.obterSaldoPorTipoLancamentoUsuario(id, TipoLancamento.DESPESA);
+		
+		if (receitas == null)
+			receitas = BigDecimal.ZERO;
+		
+		if (despesas == null)
+			despesas = BigDecimal.ZERO;
+		
+		return receitas.subtract(despesas);
 	}
 
 }

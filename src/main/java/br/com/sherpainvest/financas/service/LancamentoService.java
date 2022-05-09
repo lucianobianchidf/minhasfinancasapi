@@ -1,6 +1,8 @@
 package br.com.sherpainvest.financas.service;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import br.com.sherpainvest.financas.model.entity.Lancamento;
 import br.com.sherpainvest.financas.model.enums.StatusLancamento;
@@ -18,5 +20,9 @@ public interface LancamentoService {
 	void atualizarStatus(Lancamento lancamento, StatusLancamento statusLancamento);
 	
 	void validar(Lancamento lancamento);
+
+	Optional<Lancamento> buscarPorId(Long idLancamento);
+	
+	BigDecimal obterSaldoPorUsuario(Long id);
 
 }
