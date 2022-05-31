@@ -69,6 +69,12 @@ public class LancamentoController {
 		}
 	}
 	
+	@GetMapping("{id}")
+	public ResponseEntity obterLancamento(@PathVariable("id") Long id) {
+		return lancamentoService.buscarPorId(id).map( lancamento -> new ResponseEntity(converter(lancamento), HttpStatus.OK))
+				.orElseGet(() -> new ResponseEntity(HttpStatus.NOT_FOUND));
+	}
+	
 	@PutMapping("{id}/atualiza-status")
 	public ResponseEntity atualizarStatus(@PathVariable("id") Long id, @RequestBody AtualizaStatusDTO atualizaStatusDTO) {
 		return lancamentoService.buscarPorId(id).map( entidade -> {
@@ -79,7 +85,7 @@ public class LancamentoController {
 			try {
 				entidade.setStatus(statusSelecionado);
 				lancamentoService.atualizar(entidade);
-				return ResponseEntity.ok(entidade);
+				return new ResponseEntity(HttpStatus.OK);
 			} catch (RegraNegocioException e) {
 				return ResponseEntity.badRequest().body(e.getMessage());
 			}
@@ -95,8 +101,8 @@ public class LancamentoController {
 				lancamento.setId(entidade.getId());
 				lancamentoService.atualizar(lancamento);
 				
-				//return ResponseEntity.ok(lancamento);
-				return new ResponseEntity(lancamento, HttpStatus.OK);
+				return new ResponseEntity(HttpStatus.OK);
+				//return new ResponseEntity(lancamento, HttpStatus.OK);
 			} catch (RegraNegocioException e) {
 				return ResponseEntity.badRequest().body(e.getMessage());
 			}
@@ -109,6 +115,18 @@ public class LancamentoController {
 			lancamentoService.deletar(entidade);
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}).orElseGet(() -> new ResponseEntity("Lançamento não encontrado na base de dados", HttpStatus.BAD_REQUEST));
+	}
+	
+	private LancamentoDTO converter(Lancamento lancamento) {
+		return LancamentoDTO.builder()
+				.id(lancamento.getId())
+				.descricao(lancamento.getDescricao())
+				.valor(lancamento.getValor())
+				.mes(lancamento.getMes())
+				.ano(lancamento.getAno())
+				.statusLancamento(lancamento.getStatus().name())
+				.tipoLancamento(lancamento.getTipo().name())
+				.idUsuario(lancamento.getUsuario().getId()).build();
 	}
 	
 	private Lancamento converter(LancamentoDTO lancamentoDTO) {
