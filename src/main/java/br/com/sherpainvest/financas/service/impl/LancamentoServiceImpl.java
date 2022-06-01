@@ -6,9 +6,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.ExampleMatcher.StringMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +14,7 @@ import br.com.sherpainvest.financas.model.entity.Lancamento;
 import br.com.sherpainvest.financas.model.enums.StatusLancamento;
 import br.com.sherpainvest.financas.model.enums.TipoLancamento;
 import br.com.sherpainvest.financas.model.repository.LancamentoRepository;
+import br.com.sherpainvest.financas.model.repository.LancamentoRepositoryCustom;
 import br.com.sherpainvest.financas.service.LancamentoService;
 
 @Service
@@ -51,11 +49,7 @@ public class LancamentoServiceImpl implements LancamentoService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<Lancamento> buscar(Lancamento lancamentoFiltro) {
-		Example<Lancamento> example = Example.of(lancamentoFiltro, ExampleMatcher.matching()
-														.withIgnoreCase()
-														.withStringMatcher(StringMatcher.CONTAINING));
-		
-		return lancamentoRepository.findAll(example);
+		return lancamentoRepository.buscarLancamentos(lancamentoFiltro);
 	}
 
 	@Override

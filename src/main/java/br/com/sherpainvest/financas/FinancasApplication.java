@@ -19,6 +19,4 @@ public class FinancasApplication implements WebMvcConfigurer {
 		registry.addMapping("/**").allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
 	}
 	
-	
-
 }
