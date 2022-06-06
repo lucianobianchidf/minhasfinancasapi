@@ -3,6 +3,7 @@ package br.com.sherpainvest.financas.service.impl;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,10 +18,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private PasswordEncoder encoder;
 
-	public UsuarioServiceImpl(UsuarioRepository usuarioRepository) {
+	public UsuarioServiceImpl(UsuarioRepository usuarioRepository, PasswordEncoder encoder) {
 		super();
 		this.usuarioRepository = usuarioRepository;
+		this.encoder = encoder;
 	}
 
 	@Override
@@ -30,7 +35,9 @@ public class UsuarioServiceImpl implements UsuarioService {
 		if (!usuario.isPresent())
 			throw new ErroAutenticacaoException("Usuário não encontrado.");
 		
-		if (!usuario.get().getSenha().equals(senha))
+		boolean isSenhaValida = encoder.matches(senha,  usuario.get().getSenha());
+		
+		if (!isSenhaValida)
 			throw new ErroAutenticacaoException("Senha inválida.");
 		
 		return usuario.get();
@@ -40,7 +47,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 	@Transactional
 	public Usuario salvarUsuario(Usuario usuario) {
 		validarEmail(usuario.getEmail());
+		criptografarSenha(usuario);
 		return usuarioRepository.save(usuario);
+	}
+
+	private void criptografarSenha(Usuario usuario) {
+		String senha = usuario.getSenha();
+		String senhaCripto = encoder.encode(senha);
+		usuario.setSenha(senhaCripto);
 	}
 
 	@Override

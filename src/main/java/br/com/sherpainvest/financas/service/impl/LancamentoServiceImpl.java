@@ -14,7 +14,6 @@ import br.com.sherpainvest.financas.model.entity.Lancamento;
 import br.com.sherpainvest.financas.model.enums.StatusLancamento;
 import br.com.sherpainvest.financas.model.enums.TipoLancamento;
 import br.com.sherpainvest.financas.model.repository.LancamentoRepository;
-import br.com.sherpainvest.financas.model.repository.LancamentoRepositoryCustom;
 import br.com.sherpainvest.financas.service.LancamentoService;
 
 @Service

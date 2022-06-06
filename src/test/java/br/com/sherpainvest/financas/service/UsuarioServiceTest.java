@@ -7,6 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -30,10 +32,13 @@ public class UsuarioServiceTest {
 	
 	UsuarioRepository usuarioRepository4Mock;
 	
+	@MockBean
+	PasswordEncoder passwordEncode;
+	
 	@BeforeEach
 	public void setUp() {
 		usuarioRepository4Mock = Mockito.mock(UsuarioRepository.class);
-		usuarioService4Mock = new UsuarioServiceImpl(usuarioRepository4Mock);
+		usuarioService4Mock = new UsuarioServiceImpl(usuarioRepository4Mock, passwordEncode);
 	}
 	
 	@Test

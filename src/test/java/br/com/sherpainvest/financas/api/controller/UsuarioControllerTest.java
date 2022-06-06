@@ -50,7 +50,7 @@ public class UsuarioControllerTest {
 		
 		//cenario
 		UsuarioDTO usuarioDTO = UsuarioDTO.builder().email(email).senha(senha).build();
-		Usuario usuario = Usuario.builder().id(1l).nome("Luciano").email(email).senha(senha).build();
+		Usuario usuario = Usuario.builder().id(7l).nome("Luciano").email(email).senha(senha).build();
 
 		Mockito.when(usuarioService.autenticar(email, senha)).thenReturn(usuario);
 		
