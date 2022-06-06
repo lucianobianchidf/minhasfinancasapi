@@ -1,7 +1,6 @@
 package br.com.sherpainvest.financas.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mockitoSession;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,13 +12,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.data.domain.Example;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.sherpainvest.financas.exception.RegraNegocioException;
 import br.com.sherpainvest.financas.model.entity.Lancamento;
-import br.com.sherpainvest.financas.model.entity.Usuario;
 import br.com.sherpainvest.financas.model.enums.StatusLancamento;
 import br.com.sherpainvest.financas.model.repository.LancamentoRepository;
 import br.com.sherpainvest.financas.model.repository.LancamentoRepositoryTest;
@@ -120,13 +117,15 @@ public class LancamentoServiceTest {
 	}
 	
 	@Test
-	public void deveFiltarLancamentos() {
+	public void deveFiltrarLancamentos() {
 		//cenario
 		Lancamento lancamento = LancamentoRepositoryTest.criarLancamento();
 		lancamento.setId(1l);
 		
 		List<Lancamento> lista = Arrays.asList(lancamento);
-		Mockito.when(repository.findAll(Mockito.any(Example.class))).thenReturn(lista);
+		//Mockito.when(repository.findAll(Mockito.any(Example.class))).thenReturn(lista);
+		
+		Mockito.when(repository.buscarLancamentos(Mockito.any(Lancamento.class))).thenReturn(lista);
 		
 		//execução
 		List<Lancamento> resultado = service.buscar(lancamento);
